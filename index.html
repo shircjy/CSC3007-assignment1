@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    #timestamp {
+      font-family: arial, sans-serif;
+      text-align: center;
+      font-size: 30px;
+      padding: 8px;
+      margin: auto;
+    }
+
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 50%;
+      text-align: center;
+      margin: auto;
+    }
+
+    td,
+    th {
+      border: 2px solid black;
+      text-align: center;
+      padding: 8px;
+    }
+
+    tr:nth-child(odd) {
+      background-color: rgb(250, 201, 209);
+    }
+
+    tr:hover {
+      background-color: #D6EEEE;
+    }
+
+    #credit {
+      font-family: arial, sans-serif;
+      text-align: center;
+      font-size: 17px;
+      padding: 2px;
+      margin: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    async function getData() {
+      fetch('https://api.data.gov.sg/v1/environment/psi')
+        .then(response => response.json())
+        .then(data => {
+
+          var timestamp = data.items[0]["update_timestamp"]
+          $("#timestamp").html("PSI Reading - " + timestamp);
+          console.log(timestamp)
+
+          var dataList = data.items[0]["readings"];
+
+          var table = $("<table><tr><th>Metric</th><th>National</th><th>Central</th><th>West</th><th>East</th><th>North</th><th>South</th></tr>");
+          for (let list in dataList) {
+
+            metric = list;
+            national = dataList[list]["west"];
+            central = dataList[list]["central"];
+            west = dataList[list]["west"];
+            east = dataList[list]["east"];
+            north = dataList[list]["north"];
+            south = dataList[list]["south"];
+
+            table.append("<tr><td>" + metric + "</td><td>" + national + "</td><td>" + central + "</td><td>" + west + "</td><td>" + east + "</td><td>" + north + "</td><td>" + south + "</td></tr>");
+          }
+          table.append("</table>");
+          $("#table").html(table);
+        }
+        )
+    }
+    getData();
+  </script>
+  <div id="timestamp">
+  </div>
+  <div id="table">
+  </div>
+  <div id="credit">
+    <h6>Done by Shirley Chia (1901894/2508499C)</h6>
+  </div>
+
+</body>
+
+</html>
